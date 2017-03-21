@@ -127,10 +127,10 @@ SSH_MESSAGE_TYPES = {   0x01:"disconnect",
 SSH_TYPE_BOOL = {0x00:True,
                  0xff:False}
 
-SSH_ALGO_CIPHERS = "none,aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,aes192-cbc,aes256-cbc,arcfour".split(",")
-SSH_ALGO_HMACS = "none,hmac-md5-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-ripemd160-etm@openssh.com,hmac-sha1-96-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-md5,hmac-sha1,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-ripemd160,hmac-sha1-96,hmac-md5-96".split(",")
+SSH_ALGO_CIPHERS = "none,3des-cbc,arcfour".split(",")
+SSH_ALGO_HMACS = "none,hmac-md5-96".split(",")
 SSH_ALGO_KEX = "diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1".split(",")
-SSH_ALGO_COMPRESSION = "none,zlib,zlib@openssh.com,none".split(",")
+SSH_ALGO_COMPRESSION = "none".split(",")
 SSH_ALGO_HOSTKEY = "ssh-rsa,ssh-dss".split(",")
 
 
