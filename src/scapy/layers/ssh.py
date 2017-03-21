@@ -134,6 +134,13 @@ SSH_ALGO_COMPRESSION = "none".split(",")
 SSH_ALGO_HOSTKEY = "ssh-rsa,ssh-dss".split(",")
 
 
+def padding_fix(p):
+    padd= 8-len(p)%8
+    if p.haslayer(Raw):
+        p[Raw].load += 'P'*padd
+    else:
+        p=p/('P'*padd)
+    return p
 
 def ssh_name_list(name, fmt="!I",numbytes=None, default=''):
     return [ XBLenField("%s_length"%name,None, length_of="%s"%name, fmt=fmt, numbytes=numbytes),

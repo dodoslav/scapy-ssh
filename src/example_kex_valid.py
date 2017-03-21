@@ -3,13 +3,6 @@
 # Author : tintinweb@oststrom.com <github.com/tintinweb>
 
 
-def padding_fix(p):
-    padd= 8-len(p)%8
-    if p.haslayer(Raw):
-        p[Raw].load += 'P'*padd
-    else:
-        p=p/('P'*padd)
-    return p
 
 if __name__=="__main__":
     from scapy.all import *
