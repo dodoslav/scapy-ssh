@@ -264,7 +264,10 @@ class SSHGexRequest(Packet):
 class SSHKeyExchangeReply(Packet):
     name = "Diffie-Hellman GEX Response"
     fields_desc = [
-            StrField("p || g", "dummy")
+            FieldLenField("len_p", None, length_of="p")
+            StrField("p", "")
+            FieldLenField("len_g", None, length_of="g")
+            StrField("g", "")
             ]
 
 class SSHGexInit(Packet):
@@ -290,7 +293,6 @@ class SSHDisconnect(Packet):
        
 class SSH(Packet): 
     name = "SSH"
-    
     
     def is_ascii(s):
         return all(ord(c) < 128 for c in s)
