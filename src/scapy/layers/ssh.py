@@ -7,7 +7,7 @@ from scapy.packet import Packet, bind_layers
 from scapy.fields import *
 from scapy.layers.inet import TCP, Raw
 import os, time, hashlib
-
+import util
     
 class StrCustomTerminatorField(StrField):
     def __init__(self, name, default, fmt="H", remain=0,terminator="\x00\x00", consume_terminator=True):
@@ -123,8 +123,10 @@ class XFieldLenField(FieldLenField):
 SSH_MESSAGE_TYPES = {   0x01:"disconnect",
                         0x14:"kex_init",
                         0x15:"new_keys",
-                        0x22:"gex request",
-                        0x1f:"gex response",
+                        0x1f:"key_exchange_reply ",
+                        0x20:"gex_init",
+                        0x21:"gex_reply",
+                        0x22:"gex_request",
                         0xff:"unknown"}
 SSH_TYPE_BOOL = {0x00:True,
                  0xff:False}
@@ -216,13 +218,33 @@ SSH_DISCONNECT_REASONS={  1:'HOST_NOT_ALLOWED_TO_CONNECT',
                           15:'ILLEGAL_USER_NAME',
                         }
 
+# from paramiko kex_gex.py source file
+def generateX(self):
+    # generate an "x" (1 < x < (p-1)/2).
+    q = (self.p - 1) // 2
+    qnorm = util.deflate_long(q, 0)
+    qhbyte = byte_ord(qnorm[0])
+    byte_count = len(qnorm)
+    qmask = 0xff
+    while not (qhbyte & 0x80):
+        qhbyte <<= 1
+        qmask >>= 1
+    while True:
+        x_bytes = os.urandom(byte_count)
+        x_bytes = byte_mask(x_bytes[0], qmask) + x_bytes[1:]
+        x = util.inflate_long(x_bytes, 1)
+        if (x > 1) and (x < q):
+            break
+    self.x = x
+
+
 class SSHGexRequest(Packet):
     name = "Diffie-Hellman GEX Request"
     fields_desc = [
             StrField("Group size (min/prefer/max)", "\x00\x00\x04\x00\x00\x00\x04\x00\x00\x00\x20\x00")
             ]
 
-class SSHGexResponse(Packet):
+class SSHKeyExchangeReply(Packet):
     name = "Diffie-Hellman GEX Response"
     fields_desc = [
             StrField("Group size (min/prefer/max)", "\x00\x00\x04\x00\x00\x00\x04\x00\x00\x00\x20\x00")
@@ -267,6 +289,8 @@ bind_layers(TCP, SSH, sport=22)
 bind_layers(SSH, SSHMessage)
 bind_layers(SSHMessage, SSHKexInit, {'type':0x14})
 bind_layers(SSHMessage, SSHGexRequest, {'type':0x22})
-bind_layers(SSHMessage, SSHGexResponse, {'type':0x1f})
+bind_layers(SSHMessage, SSHKeyExchangeReply, {'type':0x1f})
+bind_layers(SSHMessage, SSHGexInit, {'type':0x20})
+bind_layers(SSHMessage, SSHGexResponse, {'type':0x21})
 bind_layers(SSHMessage, SSHDisconnect, {'type':0x01})
 bind_layers(SSH, SSHEncryptedPacket)
