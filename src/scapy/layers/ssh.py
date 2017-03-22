@@ -266,6 +266,18 @@ class SSHKeyExchangeReply(Packet):
             StrField("payload", "\x00")
             ]
 
+class SSHGexInit(Packet):
+    name = "Diffie-Hellman GEX Init"
+    fields_desc = [
+            StrField("payload", "dummy")
+            ]
+
+class SSHGexResponse(Packet):
+    name = "Diffie-Hellman GEX Response"
+    fields_desc = [
+            StrField("payload", "dummy")
+            ]
+
 class SSHDisconnect(Packet):
     name = "SSH Disconnect"
     fields_desc = [
