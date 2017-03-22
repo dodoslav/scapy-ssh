@@ -8,7 +8,10 @@ from scapy.fields import *
 from scapy.layers.inet import TCP, Raw
 import os, time, hashlib
 import util
-from py3compat import long, BytesIO, u, integer_types
+from py3compat import long, BytesIO, u, integer_types, byte_chr, byte_ord, byte_mask
+
+ 
+
     
 class StrCustomTerminatorField(StrField):
     def __init__(self, name, default, fmt="H", remain=0,terminator="\x00\x00", consume_terminator=True):
@@ -236,7 +239,7 @@ def generateX(p):
         x = util.inflate_long(x_bytes, 1)
         if (x > 1) and (x < q):
             break
-    self.x = x
+    return x
 
 
 def get_bytes(packet, n):
