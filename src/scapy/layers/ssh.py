@@ -215,10 +215,10 @@ SSH_DISCONNECT_REASONS={  1:'HOST_NOT_ALLOWED_TO_CONNECT',
                           15:'ILLEGAL_USER_NAME',
                         }
 
-class SSHGexRequest(Packet):
+class SSHGex(Packet):
     name = "Diffie-Hellman GEX Request"
     fields_desc = [
-            StrField("Group size", "\x00\x00\x04\x00\x00\x00\x04\x00\x00\x00\x20\x00")
+            StrField("Group size (min/prefer/max)", "\x00\x00\x04\x00\x00\x00\x04\x00\x00\x00\x20\x00")
             ]
 
 class SSHDisconnect(Packet):
@@ -259,6 +259,7 @@ bind_layers(TCP, SSH, sport=22)
 
 bind_layers(SSH, SSHMessage)
 bind_layers(SSHMessage, SSHKexInit, {'type':0x14})
-bind_layers(SSHMessage, SSHGexRequest, {'type':0x22})
+bind_layers(SSHMessage, SSHGex, {'type':0x22})
+bind_layers(SSHMessage, SSHGex, {'type':0x1f})
 bind_layers(SSHMessage, SSHDisconnect, {'type':0x01})
 bind_layers(SSH, SSHEncryptedPacket)
