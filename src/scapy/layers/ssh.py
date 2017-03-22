@@ -8,6 +8,7 @@ from scapy.fields import *
 from scapy.layers.inet import TCP, Raw
 import os, time, hashlib
 import util
+from py3compat import long, BytesIO, u, integer_types
     
 class StrCustomTerminatorField(StrField):
     def __init__(self, name, default, fmt="H", remain=0,terminator="\x00\x00", consume_terminator=True):
@@ -238,16 +239,31 @@ def generateX(self):
     self.x = x
 
 
+def get_bytes(self, packet, n):
+    """
+    Return the next ``n`` bytes of the message (as a `str`), without
+    decomposing into an int, decoded string, etc.  Just the raw bytes are
+    returned. Returns a string of ``n`` zero bytes if there weren't ``n``
+    bytes remaining in the message.
+    """
+    b = packet.read(n)
+    max_pad_size = 1 << 20  # Limit padding to 1 MB
+    if len(b) < n < max_pad_size:
+        return b + zero_byte * (n - len(b))
+    return b
+
 class SSHGexRequest(Packet):
     name = "Diffie-Hellman GEX Request"
     fields_desc = [
             StrField("Group size (min/prefer/max)", "\x00\x00\x04\x00\x00\x00\x04\x00\x00\x00\x20\x00")
             ]
 
+
+
 class SSHKeyExchangeReply(Packet):
     name = "Diffie-Hellman GEX Response"
     fields_desc = [
-            StrField("Group size (min/prefer/max)", "\x00\x00\x04\x00\x00\x00\x04\x00\x00\x00\x20\x00")
+            StrField("payload", "\x00")
             ]
 
 class SSHDisconnect(Packet):
