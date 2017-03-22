@@ -218,7 +218,7 @@ SSH_DISCONNECT_REASONS={  1:'HOST_NOT_ALLOWED_TO_CONNECT',
 class SSHGexRequest(Packet):
     name = "Diffie-Hellman GEX Request"
     fields_desc = [
-            StrField("Group size", "\x00\x00\x04\x00\x00\x00\x04\x00\x00\x00\x02\x00")
+            StrField("Group size", "\x00\x00\x04\x00\x00\x00\x04\x00\x00\x00\x20\x00")
             ]
 
 class SSHDisconnect(Packet):
