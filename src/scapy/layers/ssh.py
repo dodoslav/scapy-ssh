@@ -220,9 +220,9 @@ SSH_DISCONNECT_REASONS={  1:'HOST_NOT_ALLOWED_TO_CONNECT',
                         }
 
 # from paramiko kex_gex.py source file
-def generateX(self):
+def generateX(p):
     # generate an "x" (1 < x < (p-1)/2).
-    q = (self.p - 1) // 2
+    q = (p - 1) // 2
     qnorm = util.deflate_long(q, 0)
     qhbyte = byte_ord(qnorm[0])
     byte_count = len(qnorm)
@@ -239,7 +239,7 @@ def generateX(self):
     self.x = x
 
 
-def get_bytes(self, packet, n):
+def get_bytes(packet, n):
     """
     Return the next ``n`` bytes of the message (as a `str`), without
     decomposing into an int, decoded string, etc.  Just the raw bytes are
