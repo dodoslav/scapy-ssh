@@ -30,7 +30,7 @@ import threading
 import logging
 
 from common import DEBUG, zero_byte, xffffffff, max_byte
-from py3compat import PY2, long, byte_chr, byte_ord, b
+from py3combat import PY2, long, byte_chr, byte_ord, b
 #from paramiko.config import SSHConfig
 
 
