@@ -123,7 +123,8 @@ class XFieldLenField(FieldLenField):
 SSH_MESSAGE_TYPES = {   0x01:"disconnect",
                         0x14:"kex_init",
                         0x15:"new_keys",
-                        0x22:"gex",
+                        0x22:"gex request",
+                        0x1f:"gex response",
                         0xff:"unknown"}
 SSH_TYPE_BOOL = {0x00:True,
                  0xff:False}
@@ -215,8 +216,14 @@ SSH_DISCONNECT_REASONS={  1:'HOST_NOT_ALLOWED_TO_CONNECT',
                           15:'ILLEGAL_USER_NAME',
                         }
 
-class SSHGex(Packet):
+class SSHGexRequest(Packet):
     name = "Diffie-Hellman GEX Request"
+    fields_desc = [
+            StrField("Group size (min/prefer/max)", "\x00\x00\x04\x00\x00\x00\x04\x00\x00\x00\x20\x00")
+            ]
+
+class SSHGexResponse(Packet):
+    name = "Diffie-Hellman GEX Response"
     fields_desc = [
             StrField("Group size (min/prefer/max)", "\x00\x00\x04\x00\x00\x00\x04\x00\x00\x00\x20\x00")
             ]
@@ -259,7 +266,7 @@ bind_layers(TCP, SSH, sport=22)
 
 bind_layers(SSH, SSHMessage)
 bind_layers(SSHMessage, SSHKexInit, {'type':0x14})
-bind_layers(SSHMessage, SSHGex, {'type':0x22})
-bind_layers(SSHMessage, SSHGex, {'type':0x1f})
+bind_layers(SSHMessage, SSHGexRequest, {'type':0x22})
+bind_layers(SSHMessage, SSHGexResponse, {'type':0x1f})
 bind_layers(SSHMessage, SSHDisconnect, {'type':0x01})
 bind_layers(SSH, SSHEncryptedPacket)
