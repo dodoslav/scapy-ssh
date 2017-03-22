@@ -265,9 +265,9 @@ class SSHKeyExchangeReply(Packet):
     name = "Diffie-Hellman GEX Response"
     fields_desc = [
             FieldLenField("len_p", None, fmt="I", length_of="p"),
-            StrField("p", "", length_from=lambda pkt: pkt.len_p),
+            StrField("p", ""),
             FieldLenField("len_g", None, fmt="I", length_of="g"),
-            StrField("g", "", length_from=lambda pkt: pkt.len_g)
+            StrField("g", "")
             ]
 
 class SSHGexInit(Packet):
