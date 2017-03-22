@@ -9,10 +9,8 @@ from scapy.layers.inet import TCP, Raw
 import os, time, hashlib
 import util
 from py3compat import long, BytesIO, u, integer_types, byte_chr, byte_ord, byte_mask
-
+from common import zero_byte, max_byte, one_byte, asbytes 
  
-
-    
 class StrCustomTerminatorField(StrField):
     def __init__(self, name, default, fmt="H", remain=0,terminator="\x00\x00", consume_terminator=True):
         StrField.__init__(self,name,default,fmt,remain)
@@ -266,13 +264,14 @@ class SSHGexRequest(Packet):
 class SSHKeyExchangeReply(Packet):
     name = "Diffie-Hellman GEX Response"
     fields_desc = [
-            StrField("payload", "\x00")
+            StrField("p || g", "dummy")
             ]
 
 class SSHGexInit(Packet):
     name = "Diffie-Hellman GEX Init"
     fields_desc = [
-            StrField("payload", "dummy")
+            StrFixedLenField("len(e)", "llll", length=4)
+            StrField("e", "dummy")
             ]
 
 class SSHGexResponse(Packet):
