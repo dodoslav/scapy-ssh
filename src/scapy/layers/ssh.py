@@ -268,6 +268,7 @@ class SSHKeyExchangeReply(Packet):
             StrLenField("p", "", length_from = lambda pkt: pkt.len_p),
             FieldLenField("len_g", None, fmt="I"),
             StrLenField("g", "", length_from = lambda pkt: pkt.len_g)
+            StrLenField("padding", "", length_from = lambda pkt: pkt.padding.length)
             ]
 
 class SSHGexInit(Packet):
@@ -306,7 +307,9 @@ class SSH(Packet):
             dummy = SSHMessage(payload,_internal=1)
             if len(payload)<=dummy.length+4:
                 return SSHMessage
-            
+            if payload[5] == '\x21' # message type
+                return SSHMessage  
+
         except:
             pass
         return SSHEncryptedPacket
