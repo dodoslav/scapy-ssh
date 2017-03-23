@@ -267,7 +267,7 @@ class SSHKeyExchangeReply(Packet):
             FieldLenField("len_p", None, fmt="I"),
             StrLenField("p", "", length_from = lambda pkt: pkt.len_p),
             FieldLenField("len_g", None, fmt="I"),
-            StrLenField("g", "", length_from = lambda pkt: pkt.len_g)
+            StrLenField("g", "", length_from = lambda pkt: pkt.len_g),
             StrLenField("padding", "", length_from = lambda pkt: pkt.padding.length)
             ]
 
