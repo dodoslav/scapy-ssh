@@ -125,7 +125,7 @@ class XFieldLenField(FieldLenField):
 SSH_MESSAGE_TYPES = {   0x01:"disconnect",
                         0x14:"kex_init",
                         0x15:"new_keys",
-                        0x1f:"key_exchange_reply ",
+                        0x1f:"key_exchange_reply",
                         0x20:"gex_init",
                         0x21:"gex_reply",
                         0x22:"gex_request",
@@ -267,8 +267,8 @@ class SSHKeyExchangeReply(Packet):
             FieldLenField("len_p", None, fmt="I"),
             StrLenField("p", "", length_from = lambda pkt: pkt.len_p),
             FieldLenField("len_g", None, fmt="I"),
-            StrLenField("g", "", length_from = lambda pkt: pkt.len_g),
-            StrLenField("padding", "", length_from = lambda pkt: pkt.padding.length)
+            StrLenField("g", "", length_from = lambda pkt: pkt.len_g)#,
+            #StrLenField("padding", "", length_from = lambda pkt: pkt.padding_length)
             ]
 
 class SSHGexInit(Packet):
@@ -307,7 +307,7 @@ class SSH(Packet):
             dummy = SSHMessage(payload,_internal=1)
             if len(payload)<=dummy.length+4:
                 return SSHMessage
-            if payload[5] == '\x21': # message type
+            if payload[5] == 0x21: # message type
                 return SSHMessage  
 
         except:
