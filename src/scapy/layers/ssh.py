@@ -307,7 +307,7 @@ class SSH(Packet):
             dummy = SSHMessage(payload,_internal=1)
             if len(payload)<=dummy.length+4:
                 return SSHMessage
-            if payload[5] == '\x21' # message type
+            if payload[5] == '\x21': # message type
                 return SSHMessage  
 
         except:
